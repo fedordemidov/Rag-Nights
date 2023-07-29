@@ -9,6 +9,9 @@ public class OpenDoor : InteractebleBase
     [SerializeField] private Transform _doorFrame;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private AnimationCurve _animationCurve;
+    [SerializeField] private AudioClip _openDoorSound;
+    [SerializeField] private AudioClip _closeDoorSound;
+    [SerializeField] private AudioSource _audioSourse;
     private Coroutine _rotateCoroutine;
 
     public override void OnInteract()
@@ -50,11 +53,13 @@ public class OpenDoor : InteractebleBase
     private DoorState GetDoorState(float angle)
     {
         if (Mathf.Approximately(0, angle))
+        {
             return DoorState.Close;
-
+        }
         if (Mathf.Approximately(_openAngle, angle))
+        {
             return DoorState.Open;
-
+        }
         return DoorState.Undefined;
     }
 
@@ -69,6 +74,9 @@ public class OpenDoor : InteractebleBase
             StopCoroutine(_rotateCoroutine);
 
         _rotateCoroutine = StartCoroutine(Rotate(currentAngle, _openAngle));
+
+        _audioSourse.clip = _openDoorSound;
+        _audioSourse.Play();
     }
 
     public void Close()
@@ -82,6 +90,9 @@ public class OpenDoor : InteractebleBase
             StopCoroutine(_rotateCoroutine);
 
         _rotateCoroutine = StartCoroutine(Rotate(currentAngle, 0));
+
+        _audioSourse.clip = _closeDoorSound;
+        _audioSourse.Play();
     }
 
     public void Toggle()
